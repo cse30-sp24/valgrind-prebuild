@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: CI
+name: Build Valgrind
 
 # Controls when the workflow will run
 on:
@@ -28,9 +28,9 @@ jobs:
       # Runs a single command using the runners shell
       - name: Setup dependencies
         run: |
-          apt update
-          apt upgrade -y
-          apt install -y build-essential gcc-arm-linux-gnueabihf binutils-arm-linux-gnueabi qemu qemu-user-static wget gcc g++ bzip2 libc6-dbg-armhf-cross file python3-zstd
+          sudo apt update
+          sudo apt upgrade -y
+          sudo apt install -y build-essential gcc-arm-linux-gnueabihf binutils-arm-linux-gnueabi qemu qemu-user-static wget gcc g++ bzip2 libc6-dbg-armhf-cross file python3-zstd
 
       # Runs a set of commands using the runners shell
       - name: Build Valgrind
