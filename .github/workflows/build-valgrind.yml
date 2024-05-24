@@ -1,40 +1,19 @@
-# This is a basic workflow to help you get started with Actions
-
 name: Build Valgrind
-
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
-
+    tags:
+      - 'v*'
 permissions: write-all
-
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
   build:
-    # The type of runner that the job will run on
     runs-on: ubuntu-22.04
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
-
-      # Runs a single command using the runners shell
       - name: Setup dependencies
         run: |
           sudo apt update
           sudo apt upgrade -y
           sudo apt install -y build-essential gcc-arm-linux-gnueabihf binutils-arm-linux-gnueabi wget zstd libc6-dbg-armhf-cross
-
-      # Runs a set of commands using the runners shell
       - name: Build Valgrind
         run: |
           wget https://sourceware.org/pub/valgrind/valgrind-3.22.0.tar.bz2
@@ -53,8 +32,6 @@ jobs:
         run: |
           cd ${{ github.workspace }}/valgrind-out/usr/local
           tar --zstd -cf valgrind-arm-static.tar.zstd *
-          
-      # Create a GitHub release
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -65,8 +42,6 @@ jobs:
           release_name: Release ${{ github.ref_name }}
           draft: false
           prerelease: false
-
-      # Upload release asset
       - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
         env:
